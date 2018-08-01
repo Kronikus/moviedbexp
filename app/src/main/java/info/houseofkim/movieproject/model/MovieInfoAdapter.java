@@ -1,4 +1,4 @@
-package info.houseofkim.movieproject;
+package info.houseofkim.movieproject.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,9 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.List;
+
+import info.houseofkim.movieproject.R;
 
 public class MovieInfoAdapter extends ArrayAdapter<MovieInfo>{
 
@@ -27,7 +28,8 @@ public class MovieInfoAdapter extends ArrayAdapter<MovieInfo>{
             convertView = LayoutInflater.from(getContext()).inflate(
                     R.layout.fragment_movie_pic, parent, false);
         }
-        ImageView iconView = (ImageView) convertView.findViewById(R.id.movie_image);
+        ImageView iconView =  convertView.findViewById(R.id.movie_image);
+        assert movieInfo != null;
         iconView.setImageResource(movieInfo.image);
 
 //        TextView versionNameView = (TextView) convertView.findViewById(R.id.);
