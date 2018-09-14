@@ -1,21 +1,26 @@
 package info.houseofkim.movieproject.model;
 
 public class MovieInfo {
+    private int movieId;
     private String movieName;
     private String movieReleaseDate;
-    public int image; //drawable reference id
+    public String image; //String to poster
     private String movieDuration;
     private String movieDescription;
+    private double movieRating;
     private String movieTrailer1;
     private String movieTrailer2;
     private String movieTrailer3;
-    public MovieInfo(String name,String releasedate,int image,String description, String duration)
+    public MovieInfo(int id, String name, String releasedate,String image,String description, String duration, double rating )
     {
+        this.movieId = id;
         this.movieName = name;
         this.movieReleaseDate= releasedate;
         this.image = image;
         this.movieDescription=description;
         this.movieDuration = duration;
+        this.movieRating = rating;
+
     }
 
     public String getMovieDescription() {
@@ -34,11 +39,11 @@ public class MovieInfo {
         this.movieDuration = movieDuration;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -65,4 +70,15 @@ public class MovieInfo {
     public void setMovieTrailer1(String movieTrailer1) {
         this.movieTrailer1 = movieTrailer1;
     }
+
+    public void setMovieId(int id){this.movieId = id;}
+
+    public int getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieRating(Float rating) {this.movieRating = rating;}
+
+    public double getMovieRating(){return movieRating;}
+
 }

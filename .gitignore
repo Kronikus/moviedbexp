@@ -8,3 +8,4 @@
 /build
 /captures
 .externalNativeBuild
+app/src/java/info/houseofkim/movieproject/utils/StaticString.java
