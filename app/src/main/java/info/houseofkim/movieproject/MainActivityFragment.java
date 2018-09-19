@@ -1,19 +1,24 @@
 package info.houseofkim.movieproject;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,9 +28,10 @@ import java.util.List;
 import info.houseofkim.movieproject.model.MovieInfo;
 import info.houseofkim.movieproject.model.MovieInfoAdapter;
 import info.houseofkim.movieproject.utils.JsonUtils;
+import info.houseofkim.movieproject.utils.MovieQueryTask;
 import info.houseofkim.movieproject.utils.NetworkUtils;
 
-public class MainActivityFragment extends Fragment  {
+public class MainActivityFragment extends Fragment implements MovieQueryTask.OnTaskCompleted {
     public static final String IMAGE_ID_LIST = "image_ids";
     public static final String LIST_INDEX = "list_index";
 
@@ -36,6 +42,15 @@ public class MainActivityFragment extends Fragment  {
     View rootView ;
     GridView gridView;
     MovieInfoAdapter movieAdapter;
+
+    public void onTaskCompleted(MovieInfo[] response) {
+        movieAdapter = new MovieInfoAdapter(getActivity(), Arrays.asList(response));
+        gridView.setAdapter(movieAdapter);
+        movieAdapter.notifyDataSetChanged();
+    }
+
+
+
     public interface OnImageClickListener {
 
         void onImageSelected (int position);
@@ -55,9 +70,6 @@ public class MainActivityFragment extends Fragment  {
         }
     }
 
-    public MainActivityFragment() {
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -71,11 +83,25 @@ public class MainActivityFragment extends Fragment  {
          final MovieInfo[]movieInfos = JsonUtils.parseStartingMovieJSON(this.getContext(),
                 this.getString(R.string.startup));
        // Log.e("Adapter1", Arrays.asList(movieInfos).toString());
-       new MovieQueryTask().execute(NetworkUtils.buildUrl("base"));
+
+        // Checking for network connectivity
+        Context context=this.getContext();
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = null;
+        if (cm != null) {
+            activeNetwork = cm.getActiveNetworkInfo();
+        }
+        boolean isConnected = activeNetwork != null &&  activeNetwork.isConnectedOrConnecting();
+        if (isConnected) {
+            MovieQueryTask task = new MovieQueryTask(MainActivityFragment.this,context);
+            task.execute(NetworkUtils.buildUrl("base"));
+
+        }
 
      //   Log.e("Adapter1", movieInfos.toString());
         movieAdapter = new MovieInfoAdapter(getActivity(), Arrays.asList(movieInfos));
-//Log.e("Adapter", movieAdapter.toString());
+    //Log.e("Adapter", movieAdapter.toString());
 
         gridView.setAdapter(movieAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -90,44 +116,7 @@ public class MainActivityFragment extends Fragment  {
         return rootView;
     }
 
-    public class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
-        // COMPLETED (26) Override onPreExecute to set the loading indicator to visible
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-           //mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected String doInBackground(URL... params) {
-            URL searchUrl = params[0];
-            String movieSearchResults = null;
-            try {
-                movieSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-                Log.e("Catalog",searchUrl.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return movieSearchResults;
-        }
-
-        @Override
-        protected void onPostExecute(String movieSearchResults) {
-            if (movieSearchResults != null && !movieSearchResults.equals("")) {
-                MovieInfo[] movieInfos = JsonUtils.parseStartingMovieJSON(getContext(), movieSearchResults );
-
-
-                movieAdapter = new MovieInfoAdapter(getActivity(), Arrays.asList(movieInfos));
-                gridView.setAdapter(movieAdapter);
-                movieAdapter.notifyDataSetChanged();
-
-            } else {
-                Log.e("onpostexecute", "No search results");
-              //  showErrorMessage();
-            }
-        }
-    }
 
 }
     //Picasso.with(this)

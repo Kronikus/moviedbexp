@@ -9,3 +9,4 @@
 /captures
 .externalNativeBuild
 app/src/main/java/info/houseofkim/movieproject/utils/StaticString.java
+/gradle.properties

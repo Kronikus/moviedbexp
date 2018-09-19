@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
+import info.houseofkim.movieproject.BuildConfig;
 import info.houseofkim.movieproject.MainActivity;
 import info.houseofkim.movieproject.R;
 
@@ -23,13 +24,17 @@ import static java.security.AccessController.getContext;
 
 public class NetworkUtils extends MainActivity{
 
-    private static String key = StaticString.getKey();
+    private final static String key = BuildConfig.API_KEY;
 
 
     final static String MOVIEDB_BASE_URL =
             "https://api.themoviedb.org/3";
 
     final static String PARAM_CATALOG = "/discover/movie";
+
+    final static String PARAM_CATALOG_POPULAR = "/movie/popular";
+    final static String PARAM_CATALOG_TOPRATED = "/movie/top_rated";
+
     final static String PARAM_SEARCH = "search/movie";
     final static String PARAM_MOVIE = "movie";
 
@@ -38,7 +43,7 @@ public class NetworkUtils extends MainActivity{
      * Default: results are sorted by best match if no field is specified.
      */
 
-    final static String  API_KEY = "api_key";
+    final static String PARAM_API_KEY = "api_key";
     final static String PARAM_LANG = "language";
     final static String PARAM_QUERY = "query";
     final static String PARAM_PAGE = "page";
@@ -54,7 +59,7 @@ public class NetworkUtils extends MainActivity{
     public static URL buildUrl(String SearchQuery) {
         Uri builtUri = Uri.parse(MOVIEDB_BASE_URL+PARAM_CATALOG)
                 .buildUpon()
-                .appendQueryParameter(API_KEY,key)
+                .appendQueryParameter(PARAM_API_KEY,key)
                 .appendQueryParameter(PARAM_LANG,"en-US")
                 .appendQueryParameter(PARAM_SORT,"popularity.desc")
                 .appendQueryParameter(PARAM_ADULT,"false")
@@ -94,6 +99,7 @@ public class NetworkUtils extends MainActivity{
         return url;
     }
     public static String getResponseFromHttpUrl(URL url) throws IOException {
+
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
        // Log.e("httpConnection",urlConnection.toString());
         try {

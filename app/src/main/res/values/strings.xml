@@ -359,4 +359,6 @@ ters may be Mechagodzilla, a robotic weapon thought to have been lost nearly 20,
 		\"release_date\": \"2018-07-20\"
 	}]
 }</string>
+    <string name="mark_as_favorite">MARK AS FAVORITE</string>
+	<string name="textview">Overview</string>
 </resources>
