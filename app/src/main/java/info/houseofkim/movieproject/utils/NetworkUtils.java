@@ -82,7 +82,7 @@ public class NetworkUtils extends MainActivity{
                 .buildUpon()
                 .appendEncodedPath(PARAM_MOVIE)
                 .appendPath(SearchMovieIdQuery)
-                .appendQueryParameter(API_KEY,key)
+                .appendQueryParameter(PARAM_API_KEY,key)
                 .appendQueryParameter(PARAM_LANG,"en-US")
                 //.appendQueryParameter(PARAM_QUERY,SearchMovieIdQuery)
                 //.appendQueryParameter(PARAM_PAGE, String.valueOf(1))
