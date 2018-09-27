@@ -3,6 +3,7 @@ package info.houseofkim.movieproject;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,6 +15,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -40,13 +44,21 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
 
     OnImageClickListener mCallback;
     View rootView ;
-    GridView gridView;
-    MovieInfoAdapter movieAdapter;
+    private GridView gridView;
+    public static MovieInfoAdapter movieAdapter;
+
+    private static MovieQueryTask.OnTaskCompleted extTask;
+    public static MovieQueryTask.OnTaskCompleted getTaskContext() {
+        return extTask;
+    }
 
     public void onTaskCompleted(MovieInfo[] response) {
-        movieAdapter = new MovieInfoAdapter(getActivity(), Arrays.asList(response));
-        gridView.setAdapter(movieAdapter);
-        movieAdapter.notifyDataSetChanged();
+        if (response != null) {
+            refreshMovies(response);
+        }
+        else {
+            Log.e("Response", "null");
+        }
     }
 
 
@@ -80,7 +92,7 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         gridView = rootView.findViewById(R.id.movie_grid);
 
-         final MovieInfo[]movieInfos = JsonUtils.parseStartingMovieJSON(this.getContext(),
+         final MovieInfo[]movieInfos = JsonUtils.parseCatalogMovieJSON(this.getContext(),
                 this.getString(R.string.startup));
        // Log.e("Adapter1", Arrays.asList(movieInfos).toString());
 
@@ -95,7 +107,7 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
         boolean isConnected = activeNetwork != null &&  activeNetwork.isConnectedOrConnecting();
         if (isConnected) {
             MovieQueryTask task = new MovieQueryTask(MainActivityFragment.this,context);
-            task.execute(NetworkUtils.buildUrl("base"));
+            task.execute(NetworkUtils.buildUrl("base",0));
 
         }
 
@@ -112,11 +124,18 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
                 mCallback.onImageSelected(movieAdapter.getMovieId(position));
             }
         });
-
+        extTask = (MovieQueryTask.OnTaskCompleted) MainActivityFragment.this;
         return rootView;
     }
 
 
+    public void refreshMovies(MovieInfo[] movieInfos) {
+
+        movieAdapter = new MovieInfoAdapter(getActivity(), Arrays.asList(movieInfos));
+        gridView.setAdapter(movieAdapter);
+        //gridView.getAdapter();
+        movieAdapter.notifyDataSetChanged();
+    }
 
 }
     //Picasso.with(this)

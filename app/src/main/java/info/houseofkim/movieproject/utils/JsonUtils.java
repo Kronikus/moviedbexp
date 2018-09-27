@@ -70,7 +70,7 @@ public class JsonUtils extends MainActivity {
         return result;
     }
 
-    public static MovieInfo[] parseStartingMovieJSON(Context context, String json) {
+    public static MovieInfo[] parseCatalogMovieJSON(Context context, String json) {
 
         MovieInfo[] result = null;
         MovieInfo movieItem;

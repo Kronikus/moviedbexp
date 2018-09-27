@@ -48,4 +48,5 @@ public class MovieInfoAdapter extends ArrayAdapter<MovieInfo>{
         MovieInfo movieInfo= mImageIds.get(position);
         return movieInfo.getMovieId();
     };
+
 }

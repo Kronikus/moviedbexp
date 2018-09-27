@@ -30,8 +30,6 @@ public class NetworkUtils extends MainActivity{
     final static String MOVIEDB_BASE_URL =
             "https://api.themoviedb.org/3";
 
-    final static String PARAM_CATALOG = "/discover/movie";
-
     final static String PARAM_CATALOG_POPULAR = "/movie/popular";
     final static String PARAM_CATALOG_TOPRATED = "/movie/top_rated";
 
@@ -56,8 +54,14 @@ public class NetworkUtils extends MainActivity{
     //final static String sortBy = "stars";
     //("api_key",API_KEY);
 
-    public static URL buildUrl(String SearchQuery) {
-        Uri builtUri = Uri.parse(MOVIEDB_BASE_URL+PARAM_CATALOG)
+    public static URL buildUrl(String SearchQuery,int preference) {
+        String PARAM_CATALOG = "/discover/movie";
+        switch (preference) {
+
+            case 0: PARAM_CATALOG = PARAM_CATALOG_POPULAR; break;
+            case 1: PARAM_CATALOG = PARAM_CATALOG_TOPRATED;break;
+        }
+        Uri builtUri = Uri.parse(MOVIEDB_BASE_URL+ PARAM_CATALOG)
                 .buildUpon()
                 .appendQueryParameter(PARAM_API_KEY,key)
                 .appendQueryParameter(PARAM_LANG,"en-US")
@@ -110,7 +114,7 @@ public class NetworkUtils extends MainActivity{
           //  Log.e("httpResult",scanner.next());
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
-                Log.e("httpResult", String.valueOf(hasInput));
+                Log.d("httpResult", String.valueOf(hasInput));
                 return scanner.next();
             } else {
                 return null;

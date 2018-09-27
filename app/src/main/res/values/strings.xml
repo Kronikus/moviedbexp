@@ -14,6 +14,17 @@
     <string name="image">poster_path</string>
     <string name="movieDuration">runtime</string>
     <string name="movieTrailer1">video</string>
+
+	<!--menu settings-->
+	<string name="movies_popular">Popular</string>
+	<string name="movies_top">Top</string>
+	<string name="search">Search</string>
+	<string name="settings">Settings</string>
+	<!--Preference -->
+	<string name="pref_sort_default">Popular</string>
+	<string name="pref_sort_label">Sort</string>
+	<string name="pref_sort_key">sort</string>
+	<!--//default movie sratup screen-->
     <string name="startup" tools:ignore="TypographyDashes">{
 	\"page\": 1,
 	\"total_results\": 372242,

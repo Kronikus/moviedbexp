@@ -13,12 +13,14 @@ import info.houseofkim.movieproject.model.MovieInfoAdapter;
 
 import android.content.Context;
 import android.widget.GridView;
+import android.widget.Toast;
+
 import info.houseofkim.movieproject.MainActivityFragment;
 
 
 
 public  class MovieQueryTask extends AsyncTask<URL, Void, String> {
-    private MovieInfoAdapter movieAdapter;
+   // private MovieInfoAdapter movieAdapter;
     private Context context;
     public interface OnTaskCompleted {
         void onTaskCompleted(MovieInfo[] response);
@@ -33,6 +35,7 @@ public  class MovieQueryTask extends AsyncTask<URL, Void, String> {
     protected void onPreExecute() {
         super.onPreExecute();
         //mLoadingIndicator.setVisibility(View.VISIBLE);
+        Log.e("Task","started");
     }
 
     @Override
@@ -52,8 +55,9 @@ public  class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
     @Override
     protected void onPostExecute(String movieSearchResults) {
+        Log.e("Task","finished");
         if (movieSearchResults != null && !movieSearchResults.equals("")) {
-            MovieInfo[] movieInfos = JsonUtils.parseStartingMovieJSON(context, movieSearchResults );
+            MovieInfo[] movieInfos = JsonUtils.parseCatalogMovieJSON(context, movieSearchResults );
 
             taskCompleted.onTaskCompleted(movieInfos);
 //

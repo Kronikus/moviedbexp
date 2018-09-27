@@ -54,7 +54,7 @@ public class DetailActivity extends  MainActivity implements LoaderManager.Loade
         }
 
         int position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
-        if (position == DEFAULT_POSITION) {
+        if (position == DEFAULT_POSITION ) {
             // EXTRA_POSITION not found in intent
             closeOnError();
             return;
@@ -101,7 +101,7 @@ public class DetailActivity extends  MainActivity implements LoaderManager.Loade
     private static class GetMovieData extends AsyncTaskLoader<MovieInfo> {
 
 
-        public GetMovieData(Context context) {
+        GetMovieData(Context context) {
             super(context);
         }
 
