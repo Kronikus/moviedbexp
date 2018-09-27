@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -81,8 +82,8 @@ public class DetailActivity extends  MainActivity implements LoaderManager.Loade
     @Override
     public void onLoadFinished(Loader<MovieInfo> loader, MovieInfo movieInfo) {
         mViewMovieName.setText(movieInfo.getMovieName());
-        DateFormat df = new SimpleDateFormat("yyyy", Locale.US);
-        mViewMovieReleaseDate.setText(String.format(movieInfo.getMovieReleaseDate(), df));
+       // DateFormat df = new SimpleDateFormat("yyyy", Locale.US);
+        mViewMovieReleaseDate.setText(getReleaseDateYear(movieInfo.getMovieReleaseDate()));
         mViewMovieDuration.setText(movieInfo.getMovieDuration());
         mViewMovieDescription.setText(movieInfo.getMovieDescription());
         mViewMovieRating.setText(String.valueOf(movieInfo.getMovieRating()));
@@ -127,5 +128,17 @@ public class DetailActivity extends  MainActivity implements LoaderManager.Loade
                 }
             return movieInfo;
         }
+    }
+
+    public  String getReleaseDateYear (String inputdate) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
+        Date date = null;
+        try {
+            date = format.parse(inputdate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat df = new SimpleDateFormat("yyyy",Locale.US);
+        return df.format(date);
     }
 }

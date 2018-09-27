@@ -138,6 +138,3 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
     }
 
 }
-    //Picasso.with(this)
-//        .load(sandwich.getImage())
-//        .into(ingredientsIv);
