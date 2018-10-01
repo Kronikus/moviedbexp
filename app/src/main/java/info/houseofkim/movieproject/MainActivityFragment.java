@@ -1,41 +1,38 @@
 package info.houseofkim.movieproject;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
-import android.content.Intent;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Loader;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.support.v4.content.AsyncTaskLoader;
-import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
 import info.houseofkim.movieproject.model.MovieInfo;
 import info.houseofkim.movieproject.model.MovieInfoAdapter;
+import info.houseofkim.movieproject.model.MovieInfosContract;
+import info.houseofkim.movieproject.model.MovieInfosDBHelper;
+import info.houseofkim.movieproject.model.MovieInfosProvider;
 import info.houseofkim.movieproject.utils.JsonUtils;
 import info.houseofkim.movieproject.utils.MovieQueryTask;
 import info.houseofkim.movieproject.utils.NetworkUtils;
 
-public class MainActivityFragment extends Fragment implements MovieQueryTask.OnTaskCompleted {
+public class MainActivityFragment extends Fragment implements MovieQueryTask.OnTaskCompleted,  LoaderManager.LoaderCallbacks<Cursor> {
     public static final String IMAGE_ID_LIST = "image_ids";
     public static final String LIST_INDEX = "list_index";
 
@@ -43,30 +40,54 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
     private int mListIndex;
 
     OnImageClickListener mCallback;
-    View rootView ;
     private GridView gridView;
-    public static MovieInfoAdapter movieAdapter;
+    public  MovieInfoAdapter movieAdapter;
 
     private static MovieQueryTask.OnTaskCompleted extTask;
+    private static final int CURSOR_LOADER_ID = 0;
+
+//    public MainActivityFragment() {
+//    }
+    
     public static MovieQueryTask.OnTaskCompleted getTaskContext() {
         return extTask;
     }
 
     public void onTaskCompleted(MovieInfo[] response) {
         if (response != null) {
-            refreshMovies(response);
-        }
-        else {
+           // Log.e("Response", response.toString());
+            MovieInfosDBHelper    mdbhelper = new MovieInfosDBHelper(getContext());
+            mdbhelper.getWritableDatabase().delete(MovieInfosContract.MovieInfoEntry.TABLE_MOVIEINFOS, null,null);
+            mdbhelper.resetId(mdbhelper.getWritableDatabase());
+                //return 0;
+            // getActivity().getContentResolver().clearAll();
+           // getActivity().getContentResolver().delete(MovieInfosContract.MovieInfoEntry.CONTENT_URI, " _ID = '%' ",null);
+            insertData(response);
+            Cursor c =
+                    getActivity().getContentResolver().query(MovieInfosContract.MovieInfoEntry.CONTENT_URI,
+                           null,
+                            null,
+                            null,
+                            null);
+
+            movieAdapter.swapCursor(c);
+           // refreshMovies(response);
+        } else {
             Log.e("Response", "null");
         }
     }
 
-
-
     public interface OnImageClickListener {
 
-        void onImageSelected (int position);
+        void onImageSelected(int position);
     }
+
+    @Override
+    public void onPause() {
+
+        super.onPause();
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -75,66 +96,157 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
         // If not, it throws an exception
         try {
             mCallback = (OnImageClickListener) context;
-        //    Log.e("onimageclick",context.toString());
+            //    Log.e("onimageclick",context.toString());
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnImageClickListener");
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             mImageIds = savedInstanceState.getIntegerArrayList(IMAGE_ID_LIST);
             mListIndex = savedInstanceState.getInt(LIST_INDEX);
         }
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         gridView = rootView.findViewById(R.id.movie_grid);
 
-         final MovieInfo[]movieInfos = JsonUtils.parseCatalogMovieJSON(this.getContext(),
-                this.getString(R.string.startup));
-       // Log.e("Adapter1", Arrays.asList(movieInfos).toString());
+
+        // Log.e("Adapter1", Arrays.asList(movieInfos).toString());
 
         // Checking for network connectivity
-        Context context=this.getContext();
+       // MovieTaskExecute();
+
+
+        //   Log.e("Adapter1", movieInfos.toString());
+        if (movieAdapter == null) {
+            movieAdapter = new MovieInfoAdapter(getActivity(), null, 0, CURSOR_LOADER_ID);
+            //Log.e("Adapter", movieAdapter.toString());
+        }
+        gridView.setAdapter(movieAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // Trigger the callback method and pass in the position that was clicked
+                //movieAdapter.getMovieId(position)
+                mCallback.onImageSelected(movieAdapter.getMovieId(position));
+//                int uriId = position + 1;
+//                // append Id to uri
+//                Uri uri = ContentUris.withAppendedId(MovieInfosContract.MovieInfoEntry.CONTENT_URI,
+//                        uriId);
+//                // create fragment
+//                DetailFragment detailFragment = DetailFragment.newInstance(uriId, uri);
+//                getActivity().getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.mo, detailFragment)
+//                        .addToBackStack(null).commit();
+             }
+        });
+        extTask = MainActivityFragment.this;
+        return rootView;
+    }
+
+    private void StartMovieTaskExecute() {
+        Context context = this.getContext();
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = null;
         if (cm != null) {
             activeNetwork = cm.getActiveNetworkInfo();
         }
-        boolean isConnected = activeNetwork != null &&  activeNetwork.isConnectedOrConnecting();
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         if (isConnected) {
-            MovieQueryTask task = new MovieQueryTask(MainActivityFragment.this,context);
-            task.execute(NetworkUtils.buildUrl("base",0));
+            MovieQueryTask task = new MovieQueryTask(MainActivityFragment.this, context);
+            task.execute(NetworkUtils.buildUrl("base", 0));
 
+        } else {
+            MovieInfo[] movieInfos = JsonUtils.parseCatalogMovieJSON(this.getContext(),
+                    this.getString(R.string.startup));
+            insertData(movieInfos);
         }
-
-     //   Log.e("Adapter1", movieInfos.toString());
-        movieAdapter = new MovieInfoAdapter(getActivity(), Arrays.asList(movieInfos));
-    //Log.e("Adapter", movieAdapter.toString());
-
-        gridView.setAdapter(movieAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // Trigger the callback method and pass in the position that was clicked
-
-                mCallback.onImageSelected(movieAdapter.getMovieId(position));
-            }
-        });
-        extTask = (MovieQueryTask.OnTaskCompleted) MainActivityFragment.this;
-        return rootView;
     }
 
 
     public void refreshMovies(MovieInfo[] movieInfos) {
 
-        movieAdapter = new MovieInfoAdapter(getActivity(), Arrays.asList(movieInfos));
+        movieAdapter = new MovieInfoAdapter(getActivity(), null, 0, CURSOR_LOADER_ID);
         gridView.setAdapter(movieAdapter);
-        //gridView.getAdapter();
         movieAdapter.notifyDataSetChanged();
     }
 
+    public  MovieInfoAdapter getAdapter() {
+        return movieAdapter;
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        Cursor c =
+                getActivity().getContentResolver().query(MovieInfosContract.MovieInfoEntry.CONTENT_URI,
+                        new String[]{MovieInfosContract.MovieInfoEntry._ID},
+                        null,
+                        null,
+                        null);
+        if (c != null){ if (c.getCount() == 0){
+            StartMovieTaskExecute();
+            c.close();
+        } }
+        // initialize loader
+        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
+
+        super.onActivityCreated(savedInstanceState);
+    }
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args){
+        return new CursorLoader(getActivity(),
+                MovieInfosContract.MovieInfoEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    // Set the cursor in our CursorAdapter once the Cursor is loaded
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        movieAdapter.swapCursor(data);
+
+
+    }
+
+    // reset CursorAdapter on Loader Reset
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader){
+        movieAdapter.swapCursor(null);
+    }
+
+    public void insertData(MovieInfo[] movieInfos){
+
+        ContentValues[] movieValuesArr = new ContentValues[movieInfos.length];
+        // Loop through static array of Flavors, add each to an instance of ContentValues
+        // in the array of ContentValues
+        for(int i = 0; i < movieValuesArr.length; i++){
+            movieValuesArr[i] = new ContentValues();
+            movieValuesArr[i].put(MovieInfosContract.MovieInfoEntry.COLUMN_IMAGE, movieInfos[i].getImage());
+            movieValuesArr[i].put(MovieInfosContract.MovieInfoEntry.COLUMN_MOVIEID,movieInfos[i].getMovieId());
+            movieValuesArr[i].put(MovieInfosContract.MovieInfoEntry.COLUMN_DESCRIPTION,
+                    movieInfos[i].getMovieDescription());
+         //   Log.e("InsertData",String.valueOf(movieValuesArr[i]));
+
+        }
+        // bulkInsert our ContentValues array
+        getActivity().getContentResolver().bulkInsert(MovieInfosContract.MovieInfoEntry.CONTENT_URI,
+                movieValuesArr);
+    }
 }

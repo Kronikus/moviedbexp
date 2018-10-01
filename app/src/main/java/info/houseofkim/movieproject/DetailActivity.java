@@ -2,12 +2,16 @@ package info.houseofkim.movieproject;
 
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +28,7 @@ import java.util.Locale;
 
 import info.houseofkim.movieproject.model.MovieInfo;
 import info.houseofkim.movieproject.model.MovieInfoAdapter;
+import info.houseofkim.movieproject.model.MovieInfosContract;
 import info.houseofkim.movieproject.utils.JsonUtils;
 import info.houseofkim.movieproject.utils.NetworkUtils;
 
@@ -35,10 +40,14 @@ public class DetailActivity extends  MainActivity implements LoaderManager.Loade
     private TextView mViewMovieRating;
     private TextView mViewMovieDescription;
 
+
+    private FrameLayout mLoadingIndicator;
+
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
     //public int current_movie=-1;
 
+    private MovieInfo mInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +58,14 @@ public class DetailActivity extends  MainActivity implements LoaderManager.Loade
         mViewMovieDuration = findViewById(R.id.movie_duration);
         mViewMovieRating = findViewById(R.id.movie_rating);
         mViewMovieReleaseDate = findViewById(R.id.movie_releasedate);
+
+        mLoadingIndicator = findViewById(R.id.progressbar_layout);
+
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
         }
-
+        assert intent != null;
         int position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
         if (position == DEFAULT_POSITION ) {
             // EXTRA_POSITION not found in intent
@@ -62,9 +74,12 @@ public class DetailActivity extends  MainActivity implements LoaderManager.Loade
         }
         current_movie = position;
 
-       // MovieInfo movieInfo= getItem(position);
-        Log.e("Detail movie url", String.valueOf(NetworkUtils.buildUrlSingleMovie(String.valueOf(position))));
-        getLoaderManager().initLoader(0, null, this).forceLoad();
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+        //MovieInfo movieInfo = MainActivityFragment.getAdapter().getItem(position);
+        //populateUI(movieInfo);
+       //MovieInfo movieInfo= getItem(position);
+       Log.d("Detail movie url", String.valueOf(NetworkUtils.buildUrlSingleMovie(String.valueOf(position))));
+       getLoaderManager().initLoader(0, null, this).forceLoad();
     }
 
     private void closeOnError() {
@@ -76,13 +91,21 @@ public class DetailActivity extends  MainActivity implements LoaderManager.Loade
 
     @Override
     public Loader<MovieInfo> onCreateLoader(int i, Bundle bundle) {
+        mLoadingIndicator.setVisibility(View.VISIBLE);
         return  new GetMovieData(this);
     }
 
     @Override
     public void onLoadFinished(Loader<MovieInfo> loader, MovieInfo movieInfo) {
+    //Log.e("DetailActivityInfo",String.valueOf(movieInfo));
+        populateUI(movieInfo);
+       mInfo = movieInfo;
+        // Toast.makeText(this, "Position clicked = " + movieInfo.getMovieName(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void populateUI(MovieInfo movieInfo) {
         mViewMovieName.setText(movieInfo.getMovieName());
-       // DateFormat df = new SimpleDateFormat("yyyy", Locale.US);
+        // DateFormat df = new SimpleDateFormat("yyyy", Locale.US);
         mViewMovieReleaseDate.setText(getReleaseDateYear(movieInfo.getMovieReleaseDate()));
         mViewMovieDuration.setText(movieInfo.getMovieDuration());
         mViewMovieDescription.setText(movieInfo.getMovieDescription());
@@ -92,13 +115,24 @@ public class DetailActivity extends  MainActivity implements LoaderManager.Loade
         Picasso.with(this)
                 .load(getString(R.string.moviedbimageurl)+movieInfo.getImage())
                 .into(iconView);
-       // Toast.makeText(this, "Position clicked = " + movieInfo.getMovieName(), Toast.LENGTH_SHORT).show();
+
+        mLoadingIndicator.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void onLoaderReset(Loader<MovieInfo> loader) {
 
     }
+
+    public void AddFavoriteClick(View view) {
+        // Loop through static array of Flavors, add each to an instance of ContentValues
+        // in the array of ContentValues
+            ContentValues movieFavoriteValue = new ContentValues();
+            movieFavoriteValue.put(MovieInfosContract.MovieFavorite.COLUMN_MOVIEID,mInfo.getMovieId());
+            //   Log.e("InsertData",String.valueOf(movieValuesArr[i]));
+        getContentResolver().insert(MovieInfosContract.MovieFavorite.CONTENT_URI,movieFavoriteValue);
+    }
+
     private static class GetMovieData extends AsyncTaskLoader<MovieInfo> {
 
 
@@ -114,20 +148,24 @@ public class DetailActivity extends  MainActivity implements LoaderManager.Loade
             try {
                 URL movie_url = NetworkUtils.buildUrlSingleMovie(String.valueOf(DetailActivity.current_movie));
                 movieJson = NetworkUtils.getResponseFromHttpUrl(movie_url);
-
+      //          Log.e("DetailLoadFinished",String.valueOf(movieJson));
+//                movieJson = MainActivityFragment.mo
             }catch (IOException e) {
                 e.printStackTrace();
 
             }
 
             if (movieJson != null && !movieJson.equals("")) {
+
                 movieInfo = JsonUtils.parseMovieJSON(getContext(), movieJson , 0);
+
             }else
                 {
                     Log.e("DetActonBackground", "No search results");
                 }
             return movieInfo;
         }
+
     }
 
     public  String getReleaseDateYear (String inputdate) {

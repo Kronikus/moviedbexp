@@ -6,11 +6,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class MovieInfosDBHelper extends SQLiteOpenHelper {
-    public static final String LOG_TAG = MovieInfosDBHelper.class.getSimpleName();
+     private static final String LOG_TAG = MovieInfosDBHelper.class.getSimpleName();
 
     //name & version
     private static final String DATABASE_NAME = "MovieInfos.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
 
     public MovieInfosDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -23,18 +23,23 @@ public class MovieInfosDBHelper extends SQLiteOpenHelper {
                 MovieInfosContract.MovieInfoEntry.TABLE_MOVIEINFOS + "(" + MovieInfosContract.MovieInfoEntry._ID +
                 " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 MovieInfosContract.MovieInfoEntry.COLUMN_MOVIEID + " INTEGER NOT NULL, " +
-                MovieInfosContract.MovieInfoEntry.COLUMN_NAME + " TEXT NOT NULL, " +
-                MovieInfosContract.MovieInfoEntry.COLUMN_RELEASEDATE + " TEXT NOT NULL, " +
+                MovieInfosContract.MovieInfoEntry.COLUMN_NAME + " TEXT, " +
+                MovieInfosContract.MovieInfoEntry.COLUMN_RELEASEDATE + " TEXT, " +
                 MovieInfosContract.MovieInfoEntry.COLUMN_IMAGE + " TEXT NOT NULL, " +
-                MovieInfosContract.MovieInfoEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL, " +
-                MovieInfosContract.MovieInfoEntry.COLUMN_DURATION + " TEXT NOT NULL, " +
-                MovieInfosContract.MovieInfoEntry.COLUMN_VERSION_NAME + " TEXT NOT NULL, " +
-                MovieInfosContract.MovieInfoEntry.COLUMN_RATING + " FLOAT NOT NULL, " +
-                MovieInfosContract.MovieInfoEntry.COLUMN_FAVORITE + " BOOL NOT NULL, " +
-                MovieInfosContract.MovieInfoEntry.COLUMN_MOVIEID + " INTEGER NOT NULL);";
+                MovieInfosContract.MovieInfoEntry.COLUMN_DESCRIPTION + " TEXT, " +
+                MovieInfosContract.MovieInfoEntry.COLUMN_DURATION + " TEXT, " +
+                MovieInfosContract.MovieInfoEntry.COLUMN_VERSION_NAME + " TEXT , " +
+                MovieInfosContract.MovieInfoEntry.COLUMN_RATING + " REAL, " +
+                MovieInfosContract.MovieInfoEntry.COLUMN_POPULARITY + " REAL, " +
+                MovieInfosContract.MovieInfoEntry.COLUMN_FAVORITE + " BOOL  );";
 
+        final String SQL_CREATE_MOVIE_TABLE_FAVORITE = "CREATE TABLE " +
+                MovieInfosContract.MovieFavorite.TABLE_MOVIEFAVORITE + "(" + MovieInfosContract.MovieFavorite._ID +
+                " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                MovieInfosContract.MovieFavorite.COLUMN_MOVIEID + " INTEGER NOT NULL);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE_FAVORITE);
     }
 
     // Upgrade database when version is changed.
@@ -47,7 +52,16 @@ public class MovieInfosDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" +
                 MovieInfosContract.MovieInfoEntry.TABLE_MOVIEINFOS + "'");
 
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieInfosContract.MovieFavorite.TABLE_MOVIEFAVORITE);
+        sqLiteDatabase.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" +
+                MovieInfosContract.MovieFavorite.TABLE_MOVIEFAVORITE + "'");
+
         // re-create database
         onCreate(sqLiteDatabase);
+    }
+
+    public  void resetId(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME = ' " +
+                MovieInfosContract.MovieInfoEntry.TABLE_MOVIEINFOS + "'");
     }
 }

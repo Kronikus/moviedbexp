@@ -24,6 +24,7 @@ import info.houseofkim.movieproject.model.MovieInfo;
 import info.houseofkim.movieproject.model.MovieInfoAdapter;
 import info.houseofkim.movieproject.utils.MovieQueryTask;
 import info.houseofkim.movieproject.utils.NetworkUtils;
+import com.facebook.stetho.Stetho;
 
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.OnImageClickListener{
 
@@ -31,6 +32,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(
+                                Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(
+                                Stetho.defaultInspectorModulesProvider(this))
+                        .build());
     }
 //
     public void onImageSelected (int position) {
@@ -42,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         intentToStartDetailActivity.putExtra(DetailActivity.EXTRA_POSITION,position);
 
         startActivity(intentToStartDetailActivity);
+
 
         //Toast.makeText(this, "Position clicked = " + position, Toast.LENGTH_SHORT).show();
     }
@@ -65,40 +74,36 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 //            return true;
 //        }
         if (id == R.id.action_popular){
-            Context context=this;
-            ConnectivityManager cm =
-                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = null;
-            if (cm != null) {
-                activeNetwork = cm.getActiveNetworkInfo();
-            }
-            boolean isConnected = activeNetwork != null &&  activeNetwork.isConnectedOrConnecting();
-            if (isConnected) {
-                MovieQueryTask task = new MovieQueryTask(MainActivityFragment.getTaskContext(),context);
-                task.execute(NetworkUtils.buildUrl("base",0));
-
-            }
+            MovieTaskExecute(0);
             return true;
         }
         if (id == R.id.action_toprated){
-            Context context=this;
-            ConnectivityManager cm =
-                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetwork = null;
-            if (cm != null) {
-                activeNetwork = cm.getActiveNetworkInfo();
-            }
-            boolean isConnected = activeNetwork != null &&  activeNetwork.isConnectedOrConnecting();
-            if (isConnected) {
-                MovieQueryTask task = new MovieQueryTask( MainActivityFragment.getTaskContext(),context);
-                task.execute(NetworkUtils.buildUrl("base",1));
-
-            }
+            MovieTaskExecute(1);
+            return true;
+        }
+        if (id == R.id.action_favorite){
+            MovieTaskExecute(1);
             return true;
         }
       //  if (id == R.id.app_bar_search){}
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void MovieTaskExecute(int i) {
+        Context context = this;
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = null;
+        if (cm != null) {
+            activeNetwork = cm.getActiveNetworkInfo();
+        }
+        boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if (isConnected) {
+            MovieQueryTask task = new MovieQueryTask(MainActivityFragment.getTaskContext(), context);
+            task.execute(NetworkUtils.buildUrl("base", i));
+
+        }
     }
 
 

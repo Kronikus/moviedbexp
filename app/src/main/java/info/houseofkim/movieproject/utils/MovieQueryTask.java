@@ -1,5 +1,6 @@
 package info.houseofkim.movieproject.utils;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,6 +22,8 @@ import info.houseofkim.movieproject.MainActivityFragment;
 
 public  class MovieQueryTask extends AsyncTask<URL, Void, String> {
    // private MovieInfoAdapter movieAdapter;
+
+    @SuppressLint("StaticFieldLeak")
     private Context context;
     public interface OnTaskCompleted {
         void onTaskCompleted(MovieInfo[] response);
@@ -35,7 +38,7 @@ public  class MovieQueryTask extends AsyncTask<URL, Void, String> {
     protected void onPreExecute() {
         super.onPreExecute();
         //mLoadingIndicator.setVisibility(View.VISIBLE);
-        Log.e("Task","started");
+        Log.d("Task","started");
     }
 
     @Override
@@ -46,7 +49,7 @@ public  class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
         try {
             movieSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
-            Log.e("Catalog",searchUrl.toString());
+            Log.d("Catalog",searchUrl.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,7 +58,7 @@ public  class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
     @Override
     protected void onPostExecute(String movieSearchResults) {
-        Log.e("Task","finished");
+        Log.d("Task","finished");
         if (movieSearchResults != null && !movieSearchResults.equals("")) {
             MovieInfo[] movieInfos = JsonUtils.parseCatalogMovieJSON(context, movieSearchResults );
 

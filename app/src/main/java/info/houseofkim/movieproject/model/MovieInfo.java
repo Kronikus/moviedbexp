@@ -73,9 +73,7 @@ public class MovieInfo {
 
     public void setMovieId(int id){this.movieId = id;}
 
-    public int getMovieId() {
-        return movieId;
-    }
+    public int getMovieId() { return movieId; }
 
     public void setMovieRating(Float rating) {this.movieRating = rating;}
 
