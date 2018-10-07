@@ -36,11 +36,6 @@ public class NetworkUtils extends MainActivity{
     final static String PARAM_SEARCH = "search/movie";
     final static String PARAM_MOVIE = "movie";
 
-    /*
-     * The sort field. One of stars, forks, or updated.
-     * Default: results are sorted by best match if no field is specified.
-     */
-
     final static String PARAM_API_KEY = "api_key";
     final static String PARAM_LANG = "language";
     final static String PARAM_QUERY = "query";
@@ -48,11 +43,10 @@ public class NetworkUtils extends MainActivity{
     final static String PARAM_ADULT = "include_adult";
 
     final static String PARAM_VIDEO = "include_video";
+    final static String PATH_VIDEO = "videos";
+    final static String PATH_REVIEW = "reviews";
 
     final static String PARAM_SORT ="sort_by";
-//            "&language=en-US&=popularity.desc&include_adult=false&include_video=false&page=1";
-    //final static String sortBy = "stars";
-    //("api_key",API_KEY);
 
     public static URL buildUrl(String SearchQuery,int preference) {
         String PARAM_CATALOG = "/discover/movie";
@@ -88,9 +82,6 @@ public class NetworkUtils extends MainActivity{
                 .appendPath(SearchMovieIdQuery)
                 .appendQueryParameter(PARAM_API_KEY,key)
                 .appendQueryParameter(PARAM_LANG,"en-US")
-                //.appendQueryParameter(PARAM_QUERY,SearchMovieIdQuery)
-                //.appendQueryParameter(PARAM_PAGE, String.valueOf(1))
-                //.appendQueryParameter(PARAM_ADULT,"false")
                 .build();
 
         URL url = null;
@@ -102,6 +93,50 @@ public class NetworkUtils extends MainActivity{
 
         return url;
     }
+
+    public static URL buildUrlFetchMovieVideos(String SearchMovieIdQuery) {
+
+        Uri builtUri = Uri.parse(MOVIEDB_BASE_URL)
+                .buildUpon()
+                .appendEncodedPath(PARAM_MOVIE)
+                .appendPath(SearchMovieIdQuery)
+                .appendPath(PATH_VIDEO)
+                .appendQueryParameter(PARAM_API_KEY,key)
+                .appendQueryParameter(PARAM_LANG,"en-US")
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+    public static URL buildUrlFetchMovieReviews(String SearchMovieIdQuery) {
+
+        Uri builtUri = Uri.parse(MOVIEDB_BASE_URL)
+                .buildUpon()
+                .appendEncodedPath(PARAM_MOVIE)
+                .appendPath(SearchMovieIdQuery)
+                .appendPath(PATH_REVIEW)
+                .appendQueryParameter(PARAM_API_KEY,key)
+                .appendQueryParameter(PARAM_LANG,"en-US")
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return url;
+    }
+
+
     public static String getResponseFromHttpUrl(URL url) throws IOException {
 
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();

@@ -18,6 +18,10 @@
         android:id="@+id/action_toprated"
         android:title="@string/movies_top"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_favorite"
+        android:title="@string/movies_favorite"
+        app:showAsAction="never" />
     <!--<item-->
         <!--android:id="@+id/action_settings"-->
         <!--android:title="@string/settings"-->

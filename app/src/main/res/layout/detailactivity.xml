@@ -4,104 +4,154 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#a8e8ff">
+    android:background="@color/bg_color"
+    android:id="@+id/detail_activity_scrollview">
 
-<android.support.constraint.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+
+
+        <ImageView
+            android:id="@+id/movie_pic"
+            android:layout_width="150dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/imagedescr"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movie_name"
+            app:srcCompat="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/movie_name"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@android:color/holo_blue_dark"
+            android:gravity="center"
+            android:text="@string/movieName"
+            android:textAlignment="gravity"
+            android:textColor="@android:color/background_light"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+            android:id="@+id/linearside"
+            android:layout_width="210dp"
+            android:layout_height="178dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/movie_pic"
+            app:layout_constraintStart_toEndOf="@+id/movie_pic"
+            app:layout_constraintTop_toBottomOf="@+id/movie_name">
+
+            <TextView
+                android:id="@+id/movie_releasedate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/movieReleaseDate" />
+
+            <TextView
+                android:id="@+id/movie_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/movieDuration" />
+
+            <TextView
+                android:id="@+id/movie_rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/movieRating" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="113dp"
+                android:layout_height="wrap_content"
+                android:onClick="AddFavoriteClick"
+                android:text="@string/mark_as_favorite"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearbottom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@id/video_list_main"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movie_pic">
+
+            <TextView
+                android:id="@+id/movie_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/textview" />
+        </LinearLayout>
+        <FrameLayout
+            android:id="@+id/progressbar_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/bg_color"
+            android:elevation="100dp"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            android:scrollbarAlwaysDrawVerticalTrack="false"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ProgressBar
+                android:id="@+id/pb_loading_indicator"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_gravity="center"
+
+
+                android:elevation="100dp"
+                android:indeterminate="false"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </FrameLayout>
+
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:id="@+id/video_list_main"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@id/video_list_main"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearbottom">
 
-
-    <ImageView
-        android:id="@+id/movie_pic"
-        android:layout_width="150dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:contentDescription="@string/imagedescr"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/movie_name"
-        app:srcCompat="@mipmap/ic_launcher" />
-
-    <TextView
-        android:id="@+id/movie_name"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@android:color/holo_blue_dark"
-        android:gravity="center"
-        android:text="@string/movieName"
-        android:textAlignment="gravity"
-        android:textColor="@android:color/background_light"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/linearside"
-        android:layout_width="210dp"
-        android:layout_height="178dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/movie_pic"
-        app:layout_constraintStart_toEndOf="@+id/movie_pic"
-        app:layout_constraintTop_toBottomOf="@+id/movie_name">
-
-        <TextView
-            android:id="@+id/movie_releasedate"
+        </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/movieReleaseDate" />
+            android:id="@+id/review_list_main"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/video_list_main">
 
-        <TextView
-            android:id="@+id/movie_duration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/movieDuration" />
+        </android.support.v7.widget.RecyclerView>
 
-        <TextView
-            android:id="@+id/movie_rating"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/movieRating" />
+    </android.support.constraint.ConstraintLayout>
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="113dp"
-            android:layout_height="wrap_content"
-            android:text="@string/mark_as_favorite"
-            android:textSize="12sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearbottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/movie_pic"
-        app:layout_constraintVertical_bias="0.0">
-
-        <TextView
-            android:id="@+id/movie_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/textview" />
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
 </ScrollView>

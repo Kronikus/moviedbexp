@@ -1,10 +1,11 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">MovieProject</string>
     <string name="results">results</string>
+	<string name="content_authority">info.houseofkim.movieproject.app</string>
 
 	<string name="imagedescr">Poster</string>
 	<string name="detail_error_message">Movie data not available</string>
-	<string name="moviedbimageurl">http://image.tmdb.org/t/p/w185/</string>
+	<string name="moviedbimageurl">http://image.tmdb.org/t/p/w185</string>
 	<!--Movie model-->
 	<string name="movieId">id</string>
 	<string name="movieName">original_title</string>
@@ -18,6 +19,7 @@
 	<!--menu settings-->
 	<string name="movies_popular">Popular</string>
 	<string name="movies_top">Top</string>
+	<string name="movies_favorite">Favorite</string>
 	<string name="search">Search</string>
 	<string name="settings">Settings</string>
 	<!--Preference -->
@@ -370,6 +372,18 @@ ters may be Mechagodzilla, a robotic weapon thought to have been lost nearly 20,
 		\"release_date\": \"2018-07-20\"
 	}]
 }</string>
+
     <string name="mark_as_favorite">MARK AS FAVORITE</string>
 	<string name="textview">Overview</string>
+	<string name="movie_rating">vote_average</string>
+	<string name="movie_popularity">popularity</string>
+    <string name="left">left_tab</string>
+	<string name="right">right_tab</string>
+    <string name="base_youtube_weblink">https://www.youtube.com/watch?v=</string>
+	<string name="base_youtube_applink">vnd.youtube://</string>
+    <string name="playicon">PlayIcon</string>
+    <string name="video_text">videotext</string>
+	<string name="review_author">John Doe</string>
+	<string name="review_content">review_content</string>
+	<string name="base_review_weblink">https://www.themoviedb.org/review/</string>
 </resources>

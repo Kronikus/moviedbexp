@@ -25,10 +25,12 @@ public  class MovieQueryTask extends AsyncTask<URL, Void, String> {
 
     @SuppressLint("StaticFieldLeak")
     private Context context;
+    private OnTaskCompleted taskCompleted;
+
     public interface OnTaskCompleted {
         void onTaskCompleted(MovieInfo[] response);
     }
-    private OnTaskCompleted taskCompleted;
+
     public MovieQueryTask (OnTaskCompleted activityContext,Context mainContext){
             this.taskCompleted = activityContext;
             this.context = mainContext;
