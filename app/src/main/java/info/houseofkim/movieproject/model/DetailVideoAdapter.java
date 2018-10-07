@@ -60,7 +60,7 @@ public class DetailVideoAdapter extends RecyclerView.Adapter<DetailVideoAdapter.
                 R.layout.trailer_item, parent, false);
 
         //assert videoInfo != null;
-        Log.e(DETAIL_VIDEO_ADAPTER, String.valueOf("VideoItemStart"));
+        Log.d(DETAIL_VIDEO_ADAPTER, String.valueOf("VideoItemStart"));
         return new ViewHolder(convertView);
     }
 

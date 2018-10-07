@@ -73,7 +73,7 @@ private List<ReviewInfo> movieList;
                     R.layout.review_item, parent, false);
 
         //assert videoInfo != null;
-        Log.e(DETAIL_REVIEW_ADAPTER,String.valueOf("ReviewItemStart"));
+        Log.d(DETAIL_REVIEW_ADAPTER,String.valueOf("ReviewItemStart"));
         return new ViewHolder(convertView);
        }
 

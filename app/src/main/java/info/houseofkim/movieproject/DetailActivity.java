@@ -131,11 +131,11 @@ private RecyclerView videoView;
         populateUI(movieInfo);
 
         mInfo = movieInfo;
-        Log.e("Trailers", String.valueOf(movieInfo.getMovieTrailer1()));
-        Log.e("Trailers", String.valueOf(movieInfo.getMovieTrailer2()));
+       // Log.e("Trailers", String.valueOf(movieInfo.getMovieTrailer1()));
+       // Log.e("Trailers", String.valueOf(movieInfo.getMovieTrailer2()));
 
         videoAdapter.updateData(movieInfo.getMovieTrailer2());
-        Log.e("Reviews", String.valueOf(movieInfo.getMovieReview1()));
+        //Log.e("Reviews", String.valueOf(movieInfo.getMovieReview1()));
 
         reviewAdapter.updateData(movieInfo.getMovieReview2());
         // Toast.makeText(this, "Position clicked = " + movieInfo.getMovieName(), Toast.LENGTH_SHORT).show();
