@@ -29,7 +29,7 @@ public class MovieFavoriteTask extends AsyncTask<Void,Void,MovieInfo[]> {
 
     private MovieInfo[] getMovieFavorites(){
         Log.e(LOG_MOVIE_FAVORITE_TASK,"Started");
-        MovieInfo[] res = null;
+        MovieInfo[] res = new MovieInfo[]{};
         Cursor c =
                 mContext.getContentResolver().query(MovieInfosContract.MovieFavorite.CONTENT_URI,
                         null,
@@ -78,6 +78,8 @@ public class MovieFavoriteTask extends AsyncTask<Void,Void,MovieInfo[]> {
             taskCompleted.onMFTaskCompleted(movieInfos);
 //
         } else {
+            taskCompleted.onMFTaskCompleted(null);
+
             Log.e("OnMFTask", "No Favorites");
             //  showErrorMessage();
         }

@@ -386,4 +386,5 @@ ters may be Mechagodzilla, a robotic weapon thought to have been lost nearly 20,
 	<string name="review_author">John Doe</string>
 	<string name="review_content">review_content</string>
 	<string name="base_review_weblink">https://www.themoviedb.org/review/</string>
+    <string name="viewid">view_id</string>
 </resources>

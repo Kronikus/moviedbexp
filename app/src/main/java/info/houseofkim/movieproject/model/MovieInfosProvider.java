@@ -358,5 +358,7 @@ public class MovieInfosProvider extends ContentProvider {
         return numUpdated;
     }
 
+  
+
 
 }

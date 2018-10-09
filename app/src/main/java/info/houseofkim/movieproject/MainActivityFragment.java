@@ -25,6 +25,7 @@ import info.houseofkim.movieproject.model.MovieInfo;
 import info.houseofkim.movieproject.model.MovieInfoAdapter;
 import info.houseofkim.movieproject.model.MovieInfosContract;
 import info.houseofkim.movieproject.model.MovieInfosDBHelper;
+import info.houseofkim.movieproject.model.MovieInfosProvider;
 import info.houseofkim.movieproject.utils.JsonUtils;
 import info.houseofkim.movieproject.utils.MovieFavoriteTask;
 import info.houseofkim.movieproject.utils.MovieQueryTask;
@@ -36,7 +37,7 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
 
     private List<Integer> mImageIds;
     private int mListIndex;
-
+private Context mContext;
     OnImageClickListener mCallback;
 
 
@@ -71,10 +72,11 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
     }
 
     private void clearMovieInfosTable() {
-        MovieInfosDBHelper mdbhelper = new MovieInfosDBHelper( this.getContext());
-        mdbhelper.getWritableDatabase().delete(MovieInfosContract.MovieInfoEntry.TABLE_MOVIEINFOS, null, null);
-        mdbhelper.resetId(mdbhelper.getWritableDatabase());
-    }
+        MovieInfosDBHelper mdbhelper = new MovieInfosDBHelper(getActivity());
+
+    mdbhelper.clearTable(mdbhelper.getWritableDatabase());
+
+}
 
 
     @Override
@@ -87,6 +89,8 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
             insertData(response);
             refreshMovies();
         } else {
+            clearMovieInfosTable();
+            refreshMovies();
             Log.e("LoadFavorite", "null");
         }
     }
@@ -120,7 +124,7 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
 
         if (movieAdapter == null) {
             movieAdapter = new MovieInfoAdapter(getActivity(), null, 0, CURSOR_LOADER_ID);
-            Log.e("MainActivityFragment", movieAdapter.toString());
+          //  Log.d("MainActivityFragment", movieAdapter.toString());
 
         }
 
@@ -135,6 +139,8 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
         });
         extTask = MainActivityFragment.this;
         extTaskMF = MainActivityFragment.this;
+      //  mContext = (Context) this;
+
 
         return rootView;
     }
@@ -189,7 +195,7 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
                         null,
                         null,
                         null);
-        if (c != null) {
+        if (c != null && MainActivity.getViewId() != 2) {
             if (c.getCount() == 0) {
                 StartMovieTaskExecute();
 
@@ -197,9 +203,8 @@ public class MainActivityFragment extends Fragment implements MovieQueryTask.OnT
             }
             c.close();
         }
-        // initialize loader
-        getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
-
+            // initialize loader
+            getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
 
        super.onActivityCreated(savedInstanceState);
 

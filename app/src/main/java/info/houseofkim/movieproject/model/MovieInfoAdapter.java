@@ -2,6 +2,7 @@ package info.houseofkim.movieproject.model;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -85,5 +86,6 @@ public class MovieInfoAdapter extends CursorAdapter {
         }
         return movid;
     }
+
 
 }

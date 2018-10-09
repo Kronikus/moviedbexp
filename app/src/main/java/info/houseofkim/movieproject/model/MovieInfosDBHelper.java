@@ -69,8 +69,14 @@ public class MovieInfosDBHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void resetId(SQLiteDatabase sqLiteDatabase) {
+    private void resetId(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("UPDATE SQLITE_SEQUENCE SET SEQ=0 WHERE NAME = ' " +
                 MovieInfosContract.MovieInfoEntry.TABLE_MOVIEINFOS + "'");
     }
+    public void clearTable(SQLiteDatabase sqLiteDatabase) {
+        sqLiteDatabase.execSQL("DELETE FROM '" +
+                MovieInfosContract.MovieInfoEntry.TABLE_MOVIEINFOS + "'");
+        resetId(sqLiteDatabase);
+    }
+
 }

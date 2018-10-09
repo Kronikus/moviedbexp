@@ -37,6 +37,7 @@ import info.houseofkim.movieproject.model.MovieInfosContract;
 import info.houseofkim.movieproject.model.ReviewInfo;
 import info.houseofkim.movieproject.model.VideoInfo;
 import info.houseofkim.movieproject.utils.JsonUtils;
+import info.houseofkim.movieproject.utils.MovieFavoriteTask;
 import info.houseofkim.movieproject.utils.NetworkUtils;
 
 public class DetailActivity extends MainActivity implements LoaderManager.LoaderCallbacks<MovieInfo> {
@@ -172,9 +173,16 @@ public class DetailActivity extends MainActivity implements LoaderManager.Loader
         if (checkMovieFavorite(mInfo.getMovieId())) {
             // TODO remove from favorite
             Uri uri = MovieInfosContract.MovieFavorite.CONTENT_URI;
+            Uri uri2 = MovieInfosContract.MovieInfoEntry.CONTENT_URI;
             String selection = MovieInfosContract.MovieInfoEntry.COLUMN_MOVIEID;
             String[] selectionId = new String[]{String.valueOf(mInfo.getMovieId())};
             getContentResolver().delete(uri, selection + "= ?", selectionId);
+         //   Log.e("Unfavorite",String.valueOf(VIEW__ID));
+          //  Log.e("Unfavorite",String.valueOf(getViewId()));
+         if (getViewId() == 2) {
+             getContentResolver().delete(uri2, selection + "= ?", selectionId);
+
+         }
             Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
         } else {
             ContentValues movieFavoriteValue = new ContentValues();

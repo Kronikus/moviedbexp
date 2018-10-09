@@ -16,9 +16,10 @@ import info.houseofkim.movieproject.utils.MovieFavoriteTask;
 import info.houseofkim.movieproject.utils.MovieQueryTask;
 import info.houseofkim.movieproject.utils.NetworkUtils;
 
-public class MainActivity extends AppCompatActivity implements MainActivityFragment.OnImageClickListener{
+public class MainActivity extends AppCompatActivity implements MainActivityFragment.OnImageClickListener {
 
     public static final int LOADER_ID = 55;
+    public static int VIEW__ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,14 +32,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
                         .enableWebKitInspector(
                                 Stetho.defaultInspectorModulesProvider(this))
                         .build());
+        if (savedInstanceState != null) {
+            VIEW__ID = savedInstanceState.getInt(getString(R.string.viewid), 0);
+        }
     }
-//
-    public void onImageSelected (int position) {
-      //  Log.e("image", String.valueOf(position));
+    //
+    public void onImageSelected(int position) {
+        //  Log.e("image", String.valueOf(position));
         Context context = this;
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-        intentToStartDetailActivity.putExtra(DetailActivity.EXTRA_POSITION,position);
+        intentToStartDetailActivity.putExtra(DetailActivity.EXTRA_POSITION, position);
 
         startActivity(intentToStartDetailActivity);
 
@@ -53,24 +57,28 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         /* Return true so that the menu is displayed in the Toolbar */
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_popular){
+        if (id == R.id.action_popular) {
             MovieTaskExecute(0);
+            VIEW__ID = 0;
             return true;
         }
-        if (id == R.id.action_toprated){
+        if (id == R.id.action_toprated) {
             MovieTaskExecute(1);
+            VIEW__ID = 1;
             return true;
         }
-        if (id == R.id.action_favorite){
-            MovieFavoriteTask task = new MovieFavoriteTask(MainActivityFragment.getMFTaskContext(),this);
+        if (id == R.id.action_favorite) {
+            MovieFavoriteTask task = new MovieFavoriteTask(MainActivityFragment.getMFTaskContext(), this);
             task.execute();
+            VIEW__ID = 2;
             return true;
         }
-      //  if (id == R.id.app_bar_search){}
+        //  if (id == R.id.app_bar_search){}
 
         return super.onOptionsItemSelected(item);
     }
@@ -91,6 +99,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         }
     }
 
+    public static int getViewId() {
+        return VIEW__ID;
+    }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(getString(R.string.viewid), VIEW__ID);
+        super.onSaveInstanceState(outState);
+    }
 }
