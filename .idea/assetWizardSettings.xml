@@ -16,15 +16,31 @@
                             <entry key="launcher">
                               <value>
                                 <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="foregroundTextAsset">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="text" value="No image" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="ffffff" />
+                                      <entry key="backgroundColor" value="a0fff7" />
                                       <entry key="backgroundImage" value="D:\" />
-                                      <entry key="backgroundLayerName" value="ic_launcher_background" />
+                                      <entry key="backgroundLayerName" value="ic_picasso_error_background" />
+                                      <entry key="foregroundAssetType" value="TEXT" />
                                       <entry key="foregroundImage" value="C:\AndroidProjects\MovieProject\app\sampledata\youtube_play_icon.png" />
-                                      <entry key="foregroundLayerName" value="ic_launcher_youtube" />
-                                      <entry key="outputName" value="ic_youtube" />
+                                      <entry key="foregroundLayerName" value="ic_picasso_error" />
+                                      <entry key="outputName" value="picasso_error" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -38,6 +54,11 @@
                 </map>
               </option>
             </PersistentState>
+          </value>
+        </entry>
+        <entry key="vectorWizard">
+          <value>
+            <PersistentState />
           </value>
         </entry>
       </map>

@@ -58,6 +58,7 @@ public class MovieInfoAdapter extends CursorAdapter {
         //Log.i(LOG_TAG, "Image reference extracted: " + image);
         Picasso.with(mContext)
                 .load(mContext.getString(R.string.moviedbimageurl) + image)
+                .error(R.mipmap.picasso_error)
                 .into(viewHolder.imageView);
 
 

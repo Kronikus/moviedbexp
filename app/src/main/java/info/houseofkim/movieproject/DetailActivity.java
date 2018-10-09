@@ -133,11 +133,8 @@ public class DetailActivity extends MainActivity implements LoaderManager.Loader
         populateUI(movieInfo);
 
         mInfo = movieInfo;
-        // Log.e("Trailers", String.valueOf(movieInfo.getMovieTrailer1()));
-        // Log.e("Trailers", String.valueOf(movieInfo.getMovieTrailer2()));
 
         videoAdapter.updateData(movieInfo.getMovieTrailer2());
-        //Log.e("Reviews", String.valueOf(movieInfo.getMovieReview1()));
 
         reviewAdapter.updateData(movieInfo.getMovieReview2());
         // Toast.makeText(this, "Position clicked = " + movieInfo.getMovieName(), Toast.LENGTH_SHORT).show();
@@ -154,6 +151,7 @@ public class DetailActivity extends MainActivity implements LoaderManager.Loader
         ImageView iconView = findViewById(R.id.movie_pic);
         Picasso.with(this)
                 .load(getString(R.string.moviedbimageurl) + movieInfo.getImage())
+                .error(R.mipmap.picasso_error)
                 .into(iconView);
 
         ScrollView scrollView = findViewById(R.id.detail_activity_scrollview);
