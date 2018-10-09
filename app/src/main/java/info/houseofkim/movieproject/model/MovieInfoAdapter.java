@@ -1,6 +1,5 @@
 package info.houseofkim.movieproject.model;
 
-import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -20,37 +19,10 @@ public class MovieInfoAdapter extends CursorAdapter {
     private Context mContext;
     private static int sLoaderID;
 
-//    public MovieInfoAdapter(@NonNull Context context, @NonNull List<MovieInfo> objects) {
-//        super(context, 0, objects);
-//        mImageIds=objects;
-//    }
-//        @NonNull
-//    @Override
-//    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//
-//        MovieInfo movieInfo= getItem(position);
-//        if (convertView == null) {
-//            convertView = LayoutInflater.from(getContext()).inflate(
-//                    R.layout.fragment_movie_pic, parent, false);
-//        }
-//        ImageView iconView =  convertView.findViewById(R.id.movie_image);
-//        assert movieInfo != null;
-//        //iconView.setImageResource(movieInfo.image);
-//        Picasso.with(this.getContext())
-//            .load(getContext().getString(R.string.moviedbimageurl)+movieInfo.getImage())
-//            .into(iconView);
-//
-////        TextView versionNameView = (TextView) convertView.findViewById(R.id.);
-////        versionNameView.setText(androidFlavor.versionName
-////                + " - " + androidFlavor.versionNumber );
-//
-//        return convertView;
-//    }
-
     public static class ViewHolder {
-         final ImageView imageView;
+        final ImageView imageView;
 
-         ViewHolder(View view) {
+        ViewHolder(View view) {
             imageView = view.findViewById(R.id.movie_image);
         }
     }
@@ -66,7 +38,7 @@ public class MovieInfoAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         int layoutId = R.layout.fragment_movie_pic;
 
-     //   Log.d(LOG_TAG, "In new View");
+        //  Log.d(LOG_TAG, "In new View");
 
         View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
@@ -80,15 +52,10 @@ public class MovieInfoAdapter extends CursorAdapter {
 
         ViewHolder viewHolder = (ViewHolder) view.getTag();
 
-      //  Log.d(LOG_TAG, "In bind View");
-
-//        int versionIndex = cursor.getColumnIndex(MovieInfosContract.MovieInfoEntry.COLUMN_VERSION_NAME);
-//        final String versionName = cursor.getString(versionIndex);
-//        viewHolder.textView.setText(versionName);
-
+        // Log.d(LOG_TAG, "In bind View");
         int imageIndex = cursor.getColumnIndex(MovieInfosContract.MovieInfoEntry.COLUMN_IMAGE);
         String image = cursor.getString(imageIndex);
-      //  Log.i(LOG_TAG, "Image reference extracted: " + image);
+        //Log.i(LOG_TAG, "Image reference extracted: " + image);
         Picasso.with(mContext)
                 .load(mContext.getString(R.string.moviedbimageurl) + image)
                 .into(viewHolder.imageView);
@@ -98,25 +65,22 @@ public class MovieInfoAdapter extends CursorAdapter {
 
 
     public int getMovieId(int position) {
-        int  dbposition = position +1;
-       // Log.d("getMovieId", String.valueOf(position));
-//        Uri uri = ContentUris.withAppendedId(MovieInfosContract.MovieInfoEntry.CONTENT_URI,
-//                dbposition);
+        int dbposition = position + 1;
+        // Log.d("getMovieId", String.valueOf(position));
         Uri uri = MovieInfosContract.MovieInfoEntry.CONTENT_URI;
-       // String selection = MovieInfosContract.MovieInfoEntry._ID;
-      //  String[] selectionId = new String[]{String.valueOf(position + 1)};
         String[] resultView = new String[]{MovieInfosContract.MovieInfoEntry.COLUMN_MOVIEID};
-        Cursor mInfo = mContext.getContentResolver().query(uri, resultView,null , null, null);
+        Cursor mInfo = mContext.getContentResolver().query(uri, resultView, null, null, null);
         int movid = 0;
-        Log.d("getMovieId",String.valueOf(mInfo));
+        Log.d("getMovieId", String.valueOf(mInfo));
         if (mInfo != null) {
             if (mInfo.getCount() != 0) {
 
                 mInfo.move(dbposition);
                 movid = mInfo.getInt(mInfo.getColumnIndex(MovieInfosContract.MovieInfoEntry.COLUMN_MOVIEID));
-                Log.d("getMovieId",String.valueOf(movid));
-                mInfo.close();
+                Log.d("getMovieId", String.valueOf(movid));
+
             }
+            mInfo.close();
         }
         return movid;
     }

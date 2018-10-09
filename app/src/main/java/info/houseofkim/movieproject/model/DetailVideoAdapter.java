@@ -1,6 +1,5 @@
 package info.houseofkim.movieproject.model;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 
-
 import info.houseofkim.movieproject.R;
 
 public class DetailVideoAdapter extends RecyclerView.Adapter<DetailVideoAdapter.ViewHolder> {
@@ -24,7 +22,6 @@ public class DetailVideoAdapter extends RecyclerView.Adapter<DetailVideoAdapter.
     private List<VideoInfo> movieList;
     private ItemClickListener mClickListener;
     private LayoutInflater mInflater;
-//    private Activity mActivity;
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
@@ -49,7 +46,6 @@ public class DetailVideoAdapter extends RecyclerView.Adapter<DetailVideoAdapter.
         super();
         movieList = data;
         mInflater = LayoutInflater.from(context);
-      //  mActivity = (Activity) context;
     }
 
     @Override
@@ -88,16 +84,13 @@ public class DetailVideoAdapter extends RecyclerView.Adapter<DetailVideoAdapter.
     }
 
     public void updateData(VideoInfo[] viewModels) {
-       // movieList.clear();
         movieList = Arrays.asList(viewModels);
-        //movieList.addAll(viewModels)
-        //Collections.addAll(movieList, viewModels);
         notifyDataSetChanged();
     }
 
     private static void watchYoutubeVideo(Context context, String id) {
         //not working R.string.base_youtube_applink
-        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:"+ id));
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
         Intent webIntent = new Intent(Intent.ACTION_VIEW,
                 Uri.parse(R.string.base_youtube_weblink + id));
         try {

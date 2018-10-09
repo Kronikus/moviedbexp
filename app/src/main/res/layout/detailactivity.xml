@@ -68,13 +68,15 @@
                 android:layout_height="wrap_content"
                 android:text="@string/movieRating" />
 
-            <Button
-                android:id="@+id/button"
+            <ToggleButton
+                android:id="@+id/togglebutton"
                 android:layout_width="113dp"
                 android:layout_height="wrap_content"
                 android:onClick="AddFavoriteClick"
-                android:text="@string/mark_as_favorite"
-                android:textSize="12sp" />
+                android:textOn="@string/mark_as_favorite"
+                android:textOff="@string/mark_as_favorite"
+                android:textSize="12sp"
+                android:checked="false" />
         </LinearLayout>
 
         <LinearLayout

@@ -19,7 +19,7 @@ import info.houseofkim.movieproject.R;
 public class DetailReviewAdapter extends RecyclerView.Adapter<DetailReviewAdapter.ViewHolder> {
 
     private static final String DETAIL_REVIEW_ADAPTER = "DetailReviewAdapter";
-private List<ReviewInfo> movieList;
+    private List<ReviewInfo> movieList;
     private ItemClickListener mClickListener;
     private LayoutInflater mInflater;
 
@@ -37,50 +37,34 @@ private List<ReviewInfo> movieList;
 
         @Override
         public void onClick(View view) {
-          //  if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-            watchReview(itemView.getContext(),movieList.get(getAdapterPosition()).getReviewId());
+            //  if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            watchReview(itemView.getContext(), movieList.get(getAdapterPosition()).getReviewId());
         }
-
-
     }
 
     public DetailReviewAdapter(Context context, List<ReviewInfo> data) {
-    super();
-    movieList = data;
-    mInflater=LayoutInflater.from(context);
+        super();
+        movieList = data;
+        mInflater = LayoutInflater.from(context);
 
     }
-//
-//    @NonNull
-//    @Override
-//    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//
-////
-////        ImageView iconView = (ImageView) convertView.findViewById(R.id.movie_image);
-////        ImageView iconView =  convertView.findViewById(R.id.movie_image);
-////        assert videoInfo != null;
-////        iconView.setImageResource(videoInfo.image);
-////
-//
-//        return convertView;
-//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
 
-        View  convertView = mInflater.inflate(
-                    R.layout.review_item, parent, false);
+        View convertView = mInflater.inflate(
+                R.layout.review_item, parent, false);
 
         //assert videoInfo != null;
-        Log.d(DETAIL_REVIEW_ADAPTER,String.valueOf("ReviewItemStart"));
+        Log.d(DETAIL_REVIEW_ADAPTER, String.valueOf("ReviewItemStart"));
         return new ViewHolder(convertView);
-       }
+    }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ReviewInfo reviewInfo = movieList.get(position);
-assert reviewInfo != null;
+        assert reviewInfo != null;
         holder.reviewAuthor.setText(reviewInfo.getReviewAuthor());
         holder.reviewContent.setText(reviewInfo.getReviewContent());
 
@@ -102,21 +86,17 @@ assert reviewInfo != null;
     }
 
     public void updateData(ReviewInfo[] viewModels) {
-      //  movieList.clear();
         movieList = Arrays.asList(viewModels);
-        //movieList.addAll(viewModels)
-        //Collections.addAll(movieList, viewModels);
         notifyDataSetChanged();
     }
 
-    private static void watchReview(Context context, String id){
-     //   Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(R.string.base_youtube_applink + id));
+    private static void watchReview(Context context, String id) {
         Intent webIntent = new Intent(Intent.ACTION_VIEW,
                 Uri.parse(context.getString(R.string.base_review_weblink) + id));
-//        try {
-//       //     context.startActivity(appIntent);
-//        } catch (ActivityNotFoundException ex) {
+        try {
             context.startActivity(webIntent);
-        //}
+        } catch (ActivityNotFoundException ex) {
+            Log.e("DetailReviewAdapter", "Cannot start browser");
+        }
     }
 }

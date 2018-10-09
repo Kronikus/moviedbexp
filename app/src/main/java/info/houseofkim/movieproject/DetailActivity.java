@@ -9,7 +9,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,18 +18,16 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import info.houseofkim.movieproject.model.DetailReviewAdapter;
@@ -50,7 +47,9 @@ public class DetailActivity extends MainActivity implements LoaderManager.Loader
     private TextView mViewMovieRating;
     private TextView mViewMovieDescription;
 
-private RecyclerView videoView;
+    private ToggleButton mViewToggleButton;
+
+    private RecyclerView videoView;
     private RecyclerView reviewView;
     private FrameLayout mLoadingIndicator;
 
@@ -60,7 +59,6 @@ private RecyclerView videoView;
 
     private MovieInfo mInfo;
 
-    private DetailActivityFragment mFragment;
     private DetailVideoAdapter videoAdapter;
     private DetailReviewAdapter reviewAdapter;
     private VideoInfo[] mVideosData;
@@ -78,6 +76,8 @@ private RecyclerView videoView;
 
         mLoadingIndicator = findViewById(R.id.progressbar_layout);
 
+        mViewToggleButton = findViewById(R.id.togglebutton);
+
         Intent intent = getIntent();
         if (intent == null) {
             closeOnError();
@@ -91,6 +91,8 @@ private RecyclerView videoView;
         }
         current_movie = position;
 
+        mViewToggleButton.setChecked(checkMovieFavorite(current_movie));
+
         mLoadingIndicator.setVisibility(View.VISIBLE);
         //MovieInfo movieInfo = MainActivityFragment.getAdapter().getItem(position);
         //populateUI(movieInfo);
@@ -98,13 +100,13 @@ private RecyclerView videoView;
         Log.d("Detail movie url", String.valueOf(NetworkUtils.buildUrlSingleMovie(String.valueOf(position))));
         getLoaderManager().initLoader(0, null, this).forceLoad();
 
-        VideoInfo[] videoInfo = new VideoInfo[]{new VideoInfo("","","")};
+        VideoInfo[] videoInfo = new VideoInfo[]{new VideoInfo("", "", "")};
         videoView = findViewById(R.id.video_list_main);
         videoView.setLayoutManager(new LinearLayoutManager(this));
         videoAdapter = new DetailVideoAdapter(this, Arrays.asList(videoInfo));
         videoView.setAdapter(videoAdapter);
 
-        ReviewInfo[] reviewInfos = new ReviewInfo[]{new ReviewInfo("","","","")};
+        ReviewInfo[] reviewInfos = new ReviewInfo[]{new ReviewInfo("", "", "", "")};
         reviewView = findViewById(R.id.review_list_main);
         reviewView.setLayoutManager(new LinearLayoutManager(this));
         reviewAdapter = new DetailReviewAdapter(this, Arrays.asList(reviewInfos));
@@ -131,8 +133,8 @@ private RecyclerView videoView;
         populateUI(movieInfo);
 
         mInfo = movieInfo;
-       // Log.e("Trailers", String.valueOf(movieInfo.getMovieTrailer1()));
-       // Log.e("Trailers", String.valueOf(movieInfo.getMovieTrailer2()));
+        // Log.e("Trailers", String.valueOf(movieInfo.getMovieTrailer1()));
+        // Log.e("Trailers", String.valueOf(movieInfo.getMovieTrailer2()));
 
         videoAdapter.updateData(movieInfo.getMovieTrailer2());
         //Log.e("Reviews", String.valueOf(movieInfo.getMovieReview1()));
@@ -171,7 +173,11 @@ private RecyclerView videoView;
 
         if (checkMovieFavorite(mInfo.getMovieId())) {
             // TODO remove from favorite
-            Toast.makeText(this, "Already added", Toast.LENGTH_SHORT).show();
+            Uri uri = MovieInfosContract.MovieFavorite.CONTENT_URI;
+            String selection = MovieInfosContract.MovieInfoEntry.COLUMN_MOVIEID;
+            String[] selectionId = new String[]{String.valueOf(mInfo.getMovieId())};
+            getContentResolver().delete(uri, selection + "= ?", selectionId);
+            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
         } else {
             ContentValues movieFavoriteValue = new ContentValues();
             movieFavoriteValue.put(MovieInfosContract.MovieFavorite.COLUMN_MOVIEID, mInfo.getMovieId());
@@ -186,6 +192,7 @@ private RecyclerView videoView;
             movieFavoriteValue.put(MovieInfosContract.MovieFavorite.COLUMN_FAVORITE, true);
             //   Log.e("InsertData",String.valueOf(movieValuesArr[i]));
             getContentResolver().insert(MovieInfosContract.MovieFavorite.CONTENT_URI, movieFavoriteValue);
+            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -246,11 +253,11 @@ private RecyclerView videoView;
 
                 movieInfo = JsonUtils.parseMovieJSON(getContext(), movieJson, 0);
 
-                videos = JsonUtils.parseArrayVideosJSON(getContext(),videoJSON);
+                videos = JsonUtils.parseArrayVideosJSON(getContext(), videoJSON);
                 movieInfo.setMovieTrailer2(videos);
                 movieInfo.setMovieTrailer1(videoJSON);
 
-                reviews = JsonUtils.parseArrayReviewsJSON(getContext(),reviewJson);
+                reviews = JsonUtils.parseArrayReviewsJSON(getContext(), reviewJson);
                 movieInfo.setMovieReview1(reviewJson);
                 movieInfo.setMoviewReview2(reviews);
 

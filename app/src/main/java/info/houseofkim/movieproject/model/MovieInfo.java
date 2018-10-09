@@ -13,13 +13,13 @@ public class MovieInfo {
     private VideoInfo[] movieTrailer2;
     private String movieReview1;
     private ReviewInfo[] movieReview2;
-    public MovieInfo(int id, String name, String releasedate,String image,String description, String duration, double rating, double popularity )
-    {
+
+    public MovieInfo(int id, String name, String releasedate, String image, String description, String duration, double rating, double popularity) {
         this.movieId = id;
         this.movieName = name;
-        this.movieReleaseDate= releasedate;
+        this.movieReleaseDate = releasedate;
         this.image = image;
-        this.movieDescription=description;
+        this.movieDescription = description;
         this.movieDuration = duration;
         this.movieRating = rating;
         this.moviePopularity = popularity;
@@ -74,13 +74,21 @@ public class MovieInfo {
         this.movieTrailer1 = movieTrailer1;
     }
 
-    public void setMovieId(int id){this.movieId = id;}
+    public void setMovieId(int id) {
+        this.movieId = id;
+    }
 
-    public int getMovieId() { return movieId; }
+    public int getMovieId() {
+        return movieId;
+    }
 
-    public void setMovieRating(Float rating) {this.movieRating = rating;}
+    public void setMovieRating(Float rating) {
+        this.movieRating = rating;
+    }
 
-    public double getMovieRating(){return movieRating;}
+    public double getMovieRating() {
+        return movieRating;
+    }
 
     public double getMoviePopularity() {
         return moviePopularity;

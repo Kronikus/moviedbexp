@@ -36,15 +36,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     public void onImageSelected (int position) {
       //  Log.e("image", String.valueOf(position));
         Context context = this;
-        // COMPLETED (3) Remove the Toast and launch the DetailActivity using an explicit Intent
         Class destinationClass = DetailActivity.class;
         Intent intentToStartDetailActivity = new Intent(context, destinationClass);
         intentToStartDetailActivity.putExtra(DetailActivity.EXTRA_POSITION,position);
 
         startActivity(intentToStartDetailActivity);
 
-
-        //Toast.makeText(this, "Position clicked = " + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -60,11 +57,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-//        if (id == R.id.action_settings){
-//            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
-//            startActivity(startSettingsActivity);
-//            return true;
-//        }
         if (id == R.id.action_popular){
             MovieTaskExecute(0);
             return true;
