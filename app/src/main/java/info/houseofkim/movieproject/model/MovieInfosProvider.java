@@ -358,7 +358,12 @@ public class MovieInfosProvider extends ContentProvider {
         return numUpdated;
     }
 
-  
+  public void clearMovieInfosTable(@NonNull Uri uri){
+      final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+          mOpenHelper.clearTable(db);
+
+      }
+
 
 
 }

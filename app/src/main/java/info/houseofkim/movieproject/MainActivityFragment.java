@@ -62,7 +62,7 @@ private Context mContext;
     public void onTaskCompleted(MovieInfo[] response) {
         if (response != null) {
             // Log.e("Response", response.toString());
-            clearMovieInfosTable();
+getActivity().getContentResolver().delete(MovieInfosContract.MovieInfoEntry.CONTENT_URI,null,null);
             insertData(response);
             getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
             refreshMovies();
@@ -71,12 +71,7 @@ private Context mContext;
         }
     }
 
-    private void clearMovieInfosTable() {
-        MovieInfosDBHelper mdbhelper = new MovieInfosDBHelper(getActivity());
 
-    mdbhelper.clearTable(mdbhelper.getWritableDatabase());
-
-}
 
 
     @Override
@@ -85,11 +80,10 @@ private Context mContext;
         //   Log.e("LoadFavorite", String.valueOf(response.length));
 
         if (response != null) {
-            clearMovieInfosTable();
+            getActivity().getContentResolver().delete(MovieInfosContract.MovieInfoEntry.CONTENT_URI,null,null);
             insertData(response);
             refreshMovies();
         } else {
-            clearMovieInfosTable();
             refreshMovies();
             Log.e("LoadFavorite", "null");
         }
