@@ -66,7 +66,7 @@ private Context mContext;
                 if (getActivity().getContentResolver() != null) {
                     getActivity().getContentResolver().delete(MovieInfosContract.MovieInfoEntry.CONTENT_URI,null,null);
                     insertData(response);
-                    
+
                 }
             }
             refreshMovies();

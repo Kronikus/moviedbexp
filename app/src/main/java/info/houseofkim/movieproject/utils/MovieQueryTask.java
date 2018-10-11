@@ -67,6 +67,7 @@ public  class MovieQueryTask extends AsyncTask<URL, Void, String> {
             taskCompleted.onTaskCompleted(movieInfos);
 //
         } else {
+            taskCompleted.onTaskCompleted(null);
             Log.e("onpostexecute", "No search results");
             //  showErrorMessage();
         }
