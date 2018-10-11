@@ -62,9 +62,13 @@ private Context mContext;
     public void onTaskCompleted(MovieInfo[] response) {
         if (response != null) {
             // Log.e("Response", response.toString());
-getActivity().getContentResolver().delete(MovieInfosContract.MovieInfoEntry.CONTENT_URI,null,null);
-            insertData(response);
-            getLoaderManager().initLoader(CURSOR_LOADER_ID, null, this);
+            if(getActivity() != null) {
+                if (getActivity().getContentResolver() != null) {
+                    getActivity().getContentResolver().delete(MovieInfosContract.MovieInfoEntry.CONTENT_URI,null,null);
+                    insertData(response);
+                    
+                }
+            }
             refreshMovies();
         } else {
             Log.e("Response", "null");
@@ -80,8 +84,13 @@ getActivity().getContentResolver().delete(MovieInfosContract.MovieInfoEntry.CONT
         //   Log.e("LoadFavorite", String.valueOf(response.length));
 
         if (response != null) {
-            getActivity().getContentResolver().delete(MovieInfosContract.MovieInfoEntry.CONTENT_URI,null,null);
-            insertData(response);
+            if(getActivity() != null) {
+                if (getActivity().getContentResolver() != null) {
+                    getActivity().getContentResolver().delete(MovieInfosContract.MovieInfoEntry.CONTENT_URI,null,null);
+                    insertData(response);
+
+                }
+            }
             refreshMovies();
         } else {
             refreshMovies();

@@ -171,7 +171,7 @@ public class DetailActivity extends MainActivity implements LoaderManager.Loader
         // in the array of ContentValues
 
         if (checkMovieFavorite(mInfo.getMovieId())) {
-            // TODO remove from favorite
+            // remove from favorite
             Uri uri = MovieInfosContract.MovieFavorite.CONTENT_URI;
             Uri uri2 = MovieInfosContract.MovieInfoEntry.CONTENT_URI;
             String selection = MovieInfosContract.MovieInfoEntry.COLUMN_MOVIEID;
