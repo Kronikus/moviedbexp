@@ -37,7 +37,6 @@ import info.houseofkim.movieproject.model.MovieInfosContract;
 import info.houseofkim.movieproject.model.ReviewInfo;
 import info.houseofkim.movieproject.model.VideoInfo;
 import info.houseofkim.movieproject.utils.JsonUtils;
-import info.houseofkim.movieproject.utils.MovieFavoriteTask;
 import info.houseofkim.movieproject.utils.NetworkUtils;
 
 public class DetailActivity extends MainActivity implements LoaderManager.LoaderCallbacks<MovieInfo> {
@@ -176,14 +175,20 @@ public class DetailActivity extends MainActivity implements LoaderManager.Loader
             Uri uri2 = MovieInfosContract.MovieInfoEntry.CONTENT_URI;
             String selection = MovieInfosContract.MovieInfoEntry.COLUMN_MOVIEID;
             String[] selectionId = new String[]{String.valueOf(mInfo.getMovieId())};
-            getContentResolver().delete(uri, selection + "= ?", selectionId);
-         //   Log.e("Unfavorite",String.valueOf(VIEW__ID));
-          //  Log.e("Unfavorite",String.valueOf(getViewId()));
-         if (getViewId() == 2) {
-             getContentResolver().delete(uri2, selection + "= ?", selectionId);
+            if (getContentResolver() != null) {
+                getContentResolver().delete(uri, selection + "= ?", selectionId);
+                //   Log.e("Unfavorite",String.valueOf(VIEW__ID));
+                //  Log.e("Unfavorite",String.valueOf(getViewId()));
+                if (getViewId() == 2) {
+                    getContentResolver().delete(uri2, selection + "= ?", selectionId);
 
-         }
-            Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
+                }
+                Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(this, "Error can't get database", Toast.LENGTH_SHORT).show();
+
+            }
         } else {
             ContentValues movieFavoriteValue = new ContentValues();
             movieFavoriteValue.put(MovieInfosContract.MovieFavorite.COLUMN_MOVIEID, mInfo.getMovieId());
@@ -197,8 +202,10 @@ public class DetailActivity extends MainActivity implements LoaderManager.Loader
             movieFavoriteValue.put(MovieInfosContract.MovieFavorite.COLUMN_POPULARITY, mInfo.getMoviePopularity());
             movieFavoriteValue.put(MovieInfosContract.MovieFavorite.COLUMN_FAVORITE, true);
             //   Log.e("InsertData",String.valueOf(movieValuesArr[i]));
-            getContentResolver().insert(MovieInfosContract.MovieFavorite.CONTENT_URI, movieFavoriteValue);
-            Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
+            if (getContentResolver() != null) {
+                getContentResolver().insert(MovieInfosContract.MovieFavorite.CONTENT_URI, movieFavoriteValue);
+                Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -236,8 +243,8 @@ public class DetailActivity extends MainActivity implements LoaderManager.Loader
             String videoJSON = null;
             String reviewJson = null;
             MovieInfo movieInfo = null;
-            VideoInfo[] videos = null;
-            ReviewInfo[] reviews = null;
+            VideoInfo[] videos ;
+            ReviewInfo[] reviews ;
             try {
                 URL movie_url = NetworkUtils.buildUrlSingleMovie(String.valueOf(DetailActivity.current_movie));
                 movieJson = NetworkUtils.getResponseFromHttpUrl(movie_url);
